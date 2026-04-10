@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Bed, Bath, Maximize, LogOut, Plus, Trash2, Upload, X, Image } from "lucide-react";
+import { LogOut, Plus, Trash2, Upload, X, Image, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
 type DbProperty = {
@@ -23,10 +23,11 @@ type DbProperty = {
 };
 
 export function AdminDashboard({ session }: { session: any }) {
-  const [activeTab, setActiveTab] = useState<"list" | "add">("list");
+  const [activeTab, setActiveTab] = useState<"list" | "add" | "edit">("list");
   const [properties, setProperties] = useState<DbProperty[]>([]);
   const [filterTag, setFilterTag] = useState<string>("all");
   const [loading, setLoading] = useState(true);
+  const [editingProperty, setEditingProperty] = useState<DbProperty | null>(null);
 
   const fetchProperties = async () => {
     setLoading(true);
@@ -57,6 +58,11 @@ export function AdminDashboard({ session }: { session: any }) {
     }
   };
 
+  const handleEdit = (property: DbProperty) => {
+    setEditingProperty(property);
+    setActiveTab("edit");
+  };
+
   const filtered = filterTag === "all"
     ? properties
     : properties.filter((p) => p.tag === filterTag);
@@ -72,13 +78,13 @@ export function AdminDashboard({ session }: { session: any }) {
         </div>
         <div className="flex gap-2 mt-4 sm:mt-0">
           <button
-            onClick={() => setActiveTab("list")}
+            onClick={() => { setActiveTab("list"); setEditingProperty(null); }}
             className={`px-4 py-2 rounded-md text-xs font-medium transition-colors ${activeTab === "list" ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground hover:bg-accent"}`}
           >
             Propiedades
           </button>
           <button
-            onClick={() => setActiveTab("add")}
+            onClick={() => { setActiveTab("add"); setEditingProperty(null); }}
             className={`px-4 py-2 rounded-md text-xs font-medium transition-colors flex items-center gap-1 ${activeTab === "add" ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground hover:bg-accent"}`}
           >
             <Plus size={14} />
@@ -151,13 +157,22 @@ export function AdminDashboard({ session }: { session: any }) {
                           </span>
                         </td>
                         <td className="px-4 py-3">
-                          <button
-                            onClick={() => handleDelete(p.id)}
-                            className="p-1.5 rounded text-destructive hover:bg-destructive/10 transition-colors"
-                            title="Eliminar"
-                          >
-                            <Trash2 size={16} />
-                          </button>
+                          <div className="flex gap-1">
+                            <button
+                              onClick={() => handleEdit(p)}
+                              className="p-1.5 rounded text-primary hover:bg-primary/10 transition-colors"
+                              title="Editar"
+                            >
+                              <Pencil size={16} />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(p.id)}
+                              className="p-1.5 rounded text-destructive hover:bg-destructive/10 transition-colors"
+                              title="Eliminar"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -174,10 +189,22 @@ export function AdminDashboard({ session }: { session: any }) {
       )}
 
       {activeTab === "add" && (
-        <AddPropertyForm
+        <PropertyForm
           session={session}
           onDone={() => {
             setActiveTab("list");
+            fetchProperties();
+          }}
+        />
+      )}
+
+      {activeTab === "edit" && editingProperty && (
+        <PropertyForm
+          session={session}
+          property={editingProperty}
+          onDone={() => {
+            setActiveTab("list");
+            setEditingProperty(null);
             fetchProperties();
           }}
         />
@@ -186,38 +213,44 @@ export function AdminDashboard({ session }: { session: any }) {
   );
 }
 
-function AddPropertyForm({ session, onDone }: { session: any; onDone: () => void }) {
+function PropertyForm({ session, property, onDone }: { session: any; property?: DbProperty; onDone: () => void }) {
+  const isEditing = !!property;
   const [form, setForm] = useState({
-    title: "",
-    location: "",
-    price: "",
-    beds: "0",
-    baths: "0",
-    area: "",
-    tag: "Arriendo",
-    description: "",
-    features: "",
-    availability: "Disponible",
+    title: property?.title ?? "",
+    location: property?.location ?? "",
+    price: property?.price ?? "",
+    beds: String(property?.beds ?? 0),
+    baths: String(property?.baths ?? 0),
+    area: property?.area ?? "",
+    tag: property?.tag ?? "Arriendo",
+    description: property?.description ?? "",
+    features: property?.features?.join(", ") ?? "",
+    availability: property?.availability ?? "Disponible",
   });
-  const [images, setImages] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>(property?.images ?? []);
+  const [newImages, setNewImages] = useState<File[]>([]);
+  const [newPreviews, setNewPreviews] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
   const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
 
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setImages((prev) => [...prev, ...files]);
+    setNewImages((prev) => [...prev, ...files]);
     files.forEach((file) => {
       const reader = new FileReader();
-      reader.onloadend = () => setPreviews((prev) => [...prev, reader.result as string]);
+      reader.onloadend = () => setNewPreviews((prev) => [...prev, reader.result as string]);
       reader.readAsDataURL(file);
     });
   };
 
-  const removeImage = (idx: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== idx));
-    setPreviews((prev) => prev.filter((_, i) => i !== idx));
+  const removeExistingImage = (idx: number) => {
+    setExistingImages((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const removeNewImage = (idx: number) => {
+    setNewImages((prev) => prev.filter((_, i) => i !== idx));
+    setNewPreviews((prev) => prev.filter((_, i) => i !== idx));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -229,9 +262,9 @@ function AddPropertyForm({ session, onDone }: { session: any; onDone: () => void
     setSubmitting(true);
 
     try {
-      // Upload images
-      const imageUrls: string[] = [];
-      for (const file of images) {
+      // Upload new images
+      const uploadedUrls: string[] = [];
+      for (const file of newImages) {
         const ext = file.name.split(".").pop();
         const path = `${session.user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
         const { error: uploadError } = await supabase.storage
@@ -241,10 +274,11 @@ function AddPropertyForm({ session, onDone }: { session: any; onDone: () => void
         const { data: urlData } = supabase.storage
           .from("property-images")
           .getPublicUrl(path);
-        imageUrls.push(urlData.publicUrl);
+        uploadedUrls.push(urlData.publicUrl);
       }
 
-      const { error } = await supabase.from("properties").insert({
+      const allImages = [...existingImages, ...uploadedUrls];
+      const propertyData = {
         title: form.title,
         location: form.location,
         price: form.price,
@@ -255,13 +289,26 @@ function AddPropertyForm({ session, onDone }: { session: any; onDone: () => void
         description: form.description,
         features: form.features.split(",").map((f) => f.trim()).filter(Boolean),
         availability: form.availability,
-        image_url: imageUrls[0] || "",
-        images: imageUrls,
-        user_id: session.user.id,
-      });
+        image_url: allImages[0] || "",
+        images: allImages,
+      };
 
-      if (error) throw error;
-      toast.success("Propiedad agregada correctamente");
+      if (isEditing && property) {
+        const { error } = await supabase
+          .from("properties")
+          .update(propertyData)
+          .eq("id", property.id);
+        if (error) throw error;
+        toast.success("Propiedad actualizada correctamente");
+      } else {
+        const { error } = await supabase.from("properties").insert({
+          ...propertyData,
+          user_id: session.user.id,
+        });
+        if (error) throw error;
+        toast.success("Propiedad agregada correctamente");
+      }
+
       onDone();
     } catch (err: any) {
       toast.error("Error: " + err.message);
@@ -272,7 +319,9 @@ function AddPropertyForm({ session, onDone }: { session: any; onDone: () => void
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h2 className="font-heading text-xl font-semibold text-foreground mb-6">Agregar Propiedad</h2>
+      <h2 className="font-heading text-xl font-semibold text-foreground mb-6">
+        {isEditing ? "Editar Propiedad" : "Agregar Propiedad"}
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -339,9 +388,30 @@ function AddPropertyForm({ session, onDone }: { session: any; onDone: () => void
           />
         </div>
 
-        {/* Image upload */}
+        {/* Existing images (only in edit mode) */}
+        {isEditing && existingImages.length > 0 && (
+          <div>
+            <Label className="text-sm">Fotos actuales</Label>
+            <div className="mt-2 grid grid-cols-4 gap-2">
+              {existingImages.map((src, i) => (
+                <div key={i} className="relative group">
+                  <img src={src} alt="" className="h-20 w-full rounded object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeExistingImage(i)}
+                    className="absolute top-1 right-1 p-0.5 rounded-full bg-destructive text-destructive-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* New image upload */}
         <div>
-          <Label className="text-sm">Fotos de la propiedad</Label>
+          <Label className="text-sm">{isEditing ? "Agregar más fotos" : "Fotos de la propiedad"}</Label>
           <div className="mt-2 border-2 border-dashed border-border rounded-lg p-6 text-center">
             <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
             <p className="text-body text-sm mb-2">Arrastra o selecciona imágenes</p>
@@ -360,14 +430,14 @@ function AddPropertyForm({ session, onDone }: { session: any; onDone: () => void
               Seleccionar archivos
             </label>
           </div>
-          {previews.length > 0 && (
+          {newPreviews.length > 0 && (
             <div className="mt-3 grid grid-cols-4 gap-2">
-              {previews.map((src, i) => (
+              {newPreviews.map((src, i) => (
                 <div key={i} className="relative group">
                   <img src={src} alt="" className="h-20 w-full rounded object-cover" />
                   <button
                     type="button"
-                    onClick={() => removeImage(i)}
+                    onClick={() => removeNewImage(i)}
                     className="absolute top-1 right-1 p-0.5 rounded-full bg-destructive text-destructive-foreground opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     <X size={12} />
@@ -384,7 +454,7 @@ function AddPropertyForm({ session, onDone }: { session: any; onDone: () => void
             disabled={submitting}
             className="btn-luxury-primary rounded-md text-xs flex-1 disabled:opacity-50"
           >
-            {submitting ? "Guardando..." : "Guardar Propiedad"}
+            {submitting ? "Guardando..." : isEditing ? "Actualizar Propiedad" : "Guardar Propiedad"}
           </button>
           <button type="button" onClick={onDone} className="btn-luxury-outline rounded-md text-xs flex-1">
             Cancelar
