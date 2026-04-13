@@ -16,6 +16,7 @@ export interface Property {
   features: string[];
   availability: string;
   description: string;
+  video_url?: string;
 }
 
 export const properties: Property[] = [
