@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { PropertyCard } from "@/components/PropertyCard";
 import { useProperty, useSuggestions } from "@/hooks/use-properties";
-import { Bed, Bath, Maximize, MapPin, ArrowLeft, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Bed, Bath, Maximize, MapPin, ArrowLeft, CheckCircle, ChevronLeft, ChevronRight, Video } from "lucide-react";
 
 export const Route = createFileRoute("/propiedad/$id")({
   component: PropertyDetailPage,
@@ -162,8 +162,25 @@ function PropertyDetailPage() {
 
               <div className="mt-6">
                 <h3 className="font-heading text-lg font-semibold text-foreground mb-3">Descripción</h3>
-                <p className="text-body text-sm">{property.description}</p>
+              <p className="text-body text-sm">{property.description}</p>
               </div>
+
+              {property.video_url && (
+                <div className="mt-6">
+                  <h3 className="font-heading text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                    <Video size={18} className="text-primary" />
+                    Video de la propiedad
+                  </h3>
+                  <a
+                    href={property.video_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-md bg-primary/10 px-4 py-3 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
+                  >
+                    Ver video de la propiedad →
+                  </a>
+                </div>
+              )}
 
               <div className="mt-6 rounded bg-primary/10 px-4 py-3 text-center">
                 <span className="font-body text-sm font-semibold text-primary">{property.availability}</span>
