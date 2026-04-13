@@ -230,6 +230,8 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
   const [existingImages, setExistingImages] = useState<string[]>(property?.images ?? []);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
+  const [imageUrl, setImageUrl] = useState("");
+  const [urlImages, setUrlImages] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
   const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
@@ -251,6 +253,23 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
   const removeNewImage = (idx: number) => {
     setNewImages((prev) => prev.filter((_, i) => i !== idx));
     setNewPreviews((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const addUrlImage = () => {
+    const trimmed = imageUrl.trim();
+    if (!trimmed) return;
+    try {
+      new URL(trimmed);
+    } catch {
+      toast.error("URL no válida");
+      return;
+    }
+    setUrlImages((prev) => [...prev, trimmed]);
+    setImageUrl("");
+  };
+
+  const removeUrlImage = (idx: number) => {
+    setUrlImages((prev) => prev.filter((_, i) => i !== idx));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -277,7 +296,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
         uploadedUrls.push(urlData.publicUrl);
       }
 
-      const allImages = [...existingImages, ...uploadedUrls];
+      const allImages = [...existingImages, ...uploadedUrls, ...urlImages];
       const propertyData = {
         title: form.title,
         location: form.location,
@@ -438,6 +457,43 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
                   <button
                     type="button"
                     onClick={() => removeNewImage(i)}
+                    className="absolute top-1 right-1 p-0.5 rounded-full bg-destructive text-destructive-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Image URL input */}
+        <div>
+          <Label className="text-sm">Agregar imágenes por URL</Label>
+          <div className="mt-2 flex gap-2">
+            <Input
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://ejemplo.com/foto.jpg"
+              className="flex-1"
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addUrlImage(); } }}
+            />
+            <button
+              type="button"
+              onClick={addUrlImage}
+              className="px-4 py-2 rounded-md bg-secondary text-foreground text-xs font-medium hover:bg-accent transition-colors whitespace-nowrap"
+            >
+              Agregar URL
+            </button>
+          </div>
+          {urlImages.length > 0 && (
+            <div className="mt-3 grid grid-cols-4 gap-2">
+              {urlImages.map((src, i) => (
+                <div key={i} className="relative group">
+                  <img src={src} alt="" className="h-20 w-full rounded object-cover bg-secondary" />
+                  <button
+                    type="button"
+                    onClick={() => removeUrlImage(i)}
                     className="absolute top-1 right-1 p-0.5 rounded-full bg-destructive text-destructive-foreground opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     <X size={12} />
