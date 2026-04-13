@@ -10,8 +10,8 @@ export function Footer() {
             <div className="flex items-center gap-3 mb-4">
               <img src={logoRyu} alt="Ryu Propiedades" className="h-10 w-10 rounded-full object-cover" />
               <div>
-                <span className="font-heading text-lg font-bold text-background block leading-tight">RYU</span>
-                <span className="font-body text-[10px] uppercase tracking-[0.2em] text-background/60">Propiedades</span>
+                <span className="font-heading text-lg font-bold text-background block leading-tight lowercase">propiedades</span>
+                <span className="font-body text-[10px] uppercase tracking-[0.2em] text-background/60">constructora</span>
               </div>
             </div>
             <p className="font-body text-sm font-light leading-relaxed">
