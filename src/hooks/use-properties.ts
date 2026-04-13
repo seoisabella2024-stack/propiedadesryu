@@ -16,6 +16,7 @@ export type DbProperty = {
   description: string;
   image_url: string;
   images: string[];
+  video_url: string;
 };
 
 function dbToProperty(row: DbProperty): Property {
@@ -33,6 +34,7 @@ function dbToProperty(row: DbProperty): Property {
     description: row.description,
     image: row.image_url || row.images?.[0] || "",
     images: row.images ?? [],
+    video_url: row.video_url || "",
   };
 }
 

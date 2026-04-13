@@ -19,6 +19,7 @@ type DbProperty = {
   description: string;
   image_url: string;
   images: string[];
+  video_url: string;
   user_id: string;
 };
 
@@ -230,8 +231,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
   const [existingImages, setExistingImages] = useState<string[]>(property?.images ?? []);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
-  const [imageUrl, setImageUrl] = useState("");
-  const [urlImages, setUrlImages] = useState<string[]>([]);
+  const [videoUrl, setVideoUrl] = useState(property?.video_url ?? "");
   const [submitting, setSubmitting] = useState(false);
 
   const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
@@ -255,22 +255,6 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
     setNewPreviews((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  const addUrlImage = () => {
-    const trimmed = imageUrl.trim();
-    if (!trimmed) return;
-    try {
-      new URL(trimmed);
-    } catch {
-      toast.error("URL no válida");
-      return;
-    }
-    setUrlImages((prev) => [...prev, trimmed]);
-    setImageUrl("");
-  };
-
-  const removeUrlImage = (idx: number) => {
-    setUrlImages((prev) => prev.filter((_, i) => i !== idx));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -296,7 +280,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
         uploadedUrls.push(urlData.publicUrl);
       }
 
-      const allImages = [...existingImages, ...uploadedUrls, ...urlImages];
+      const allImages = [...existingImages, ...uploadedUrls];
       const propertyData = {
         title: form.title,
         location: form.location,
@@ -310,6 +294,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
         availability: form.availability,
         image_url: allImages[0] || "",
         images: allImages,
+        video_url: videoUrl.trim(),
       };
 
       if (isEditing && property) {
@@ -467,41 +452,16 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
           )}
         </div>
 
-        {/* Image URL input */}
+        {/* Video URL */}
         <div>
-          <Label className="text-sm">Agregar imágenes por URL</Label>
-          <div className="mt-2 flex gap-2">
-            <Input
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://ejemplo.com/foto.jpg"
-              className="flex-1"
-              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addUrlImage(); } }}
-            />
-            <button
-              type="button"
-              onClick={addUrlImage}
-              className="px-4 py-2 rounded-md bg-secondary text-foreground text-xs font-medium hover:bg-accent transition-colors whitespace-nowrap"
-            >
-              Agregar URL
-            </button>
-          </div>
-          {urlImages.length > 0 && (
-            <div className="mt-3 grid grid-cols-4 gap-2">
-              {urlImages.map((src, i) => (
-                <div key={i} className="relative group">
-                  <img src={src} alt="" className="h-20 w-full rounded object-cover bg-secondary" />
-                  <button
-                    type="button"
-                    onClick={() => removeUrlImage(i)}
-                    className="absolute top-1 right-1 p-0.5 rounded-full bg-destructive text-destructive-foreground opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <X size={12} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+          <Label className="text-sm">Link de video (YouTube, TikTok, Instagram)</Label>
+          <Input
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            placeholder="https://www.youtube.com/watch?v=... o https://www.tiktok.com/..."
+            className="mt-2"
+          />
+          <p className="text-xs text-muted-foreground mt-1">Opcional. Pega el link del video de la propiedad.</p>
         </div>
 
         <div className="flex gap-3 pt-2">
