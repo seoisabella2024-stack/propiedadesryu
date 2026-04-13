@@ -8,6 +8,7 @@ const rootDir = process.cwd();
 const outputPublicDir = resolve(rootDir, ".output/public");
 const outputServerEntry = resolve(rootDir, ".output/server/index.mjs");
 const distDir = resolve(rootDir, "dist");
+const htmlEntryFiles = ["index.html", "200.html", "404.html"];
 
 function delay(ms) {
   return new Promise((resolveDelay) => setTimeout(resolveDelay, ms));
@@ -85,13 +86,13 @@ async function main() {
 
   const html = await captureRenderedHtml("/");
 
-  await Promise.all([
-    writeFile(resolve(distDir, "index.html"), html, "utf8"),
-    writeFile(resolve(distDir, "200.html"), html, "utf8"),
-    writeFile(resolve(distDir, "404.html"), html, "utf8"),
-  ]);
+  await Promise.all(
+    [distDir, outputPublicDir].flatMap((directory) =>
+      htmlEntryFiles.map((fileName) => writeFile(resolve(directory, fileName), html, "utf8")),
+    ),
+  );
 
-  console.log("Prepared dist/ with static HTML entry files.");
+  console.log("Prepared dist/ and .output/public with static HTML entry files.");
 }
 
 main().catch((error) => {
