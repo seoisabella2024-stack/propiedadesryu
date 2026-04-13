@@ -296,7 +296,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
         uploadedUrls.push(urlData.publicUrl);
       }
 
-      const allImages = [...existingImages, ...uploadedUrls];
+      const allImages = [...existingImages, ...uploadedUrls, ...urlImages];
       const propertyData = {
         title: form.title,
         location: form.location,
