@@ -19,11 +19,11 @@ export function Navbar() {
         <Link to="/" className="flex items-center gap-3">
           <img src={logoRyu} alt="Ryu Propiedades" className="h-12 w-12 rounded-full object-cover" />
           <div className="flex flex-col">
-            <span className="font-heading text-lg font-bold tracking-tight text-foreground leading-tight">
-              RYU
+            <span className="font-heading text-lg font-bold tracking-tight text-foreground leading-tight lowercase">
+              propiedades
             </span>
             <span className="font-body text-[10px] font-medium uppercase tracking-[0.2em] text-primary">
-              Propiedades
+              constructora
             </span>
           </div>
         </Link>
