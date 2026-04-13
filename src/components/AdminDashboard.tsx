@@ -19,6 +19,7 @@ type DbProperty = {
   description: string;
   image_url: string;
   images: string[];
+  video_url: string;
   user_id: string;
 };
 
