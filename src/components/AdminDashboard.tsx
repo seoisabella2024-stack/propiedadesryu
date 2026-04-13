@@ -255,6 +255,23 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
     setNewPreviews((prev) => prev.filter((_, i) => i !== idx));
   };
 
+  const addUrlImage = () => {
+    const trimmed = imageUrl.trim();
+    if (!trimmed) return;
+    try {
+      new URL(trimmed);
+    } catch {
+      toast.error("URL no válida");
+      return;
+    }
+    setUrlImages((prev) => [...prev, trimmed]);
+    setImageUrl("");
+  };
+
+  const removeUrlImage = (idx: number) => {
+    setUrlImages((prev) => prev.filter((_, i) => i !== idx));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim()) {
