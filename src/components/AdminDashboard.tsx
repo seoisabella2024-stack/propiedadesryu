@@ -230,6 +230,8 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
   const [existingImages, setExistingImages] = useState<string[]>(property?.images ?? []);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
+  const [imageUrl, setImageUrl] = useState("");
+  const [urlImages, setUrlImages] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
   const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
