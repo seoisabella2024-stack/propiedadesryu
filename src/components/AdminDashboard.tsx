@@ -504,6 +504,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
           )}
         </div>
 
+        <div className="flex gap-3 pt-2">
           <button
             type="submit"
             disabled={submitting}
