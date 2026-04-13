@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build && cp -r .output/public dist && cp .output/server/index.mjs dist/index.html",
+    "build": "vite build && mkdir -p dist && cp -r .output/public/* dist/",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint ."
