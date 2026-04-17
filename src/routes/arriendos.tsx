@@ -10,7 +10,7 @@ export const Route = createFileRoute("/arriendos")({
   head: () => ({
     meta: [
       { title: "Arriendos — Ryu Propiedades" },
-      { name: "description", content: "Propiedades en arriendo en Los Ángeles, Chile. Departamentos y casas amobladas con disponibilidad inmediata." },
+      { name: "description", content: "Propiedades en arriendo en Los Ángeles, Chile. Departamentos y casas con disponibilidad inmediata." },
       { property: "og:title", content: "Arriendos — Ryu Propiedades" },
       { property: "og:description", content: "Propiedades en arriendo en Los Ángeles, Chile." },
     ],
@@ -29,7 +29,7 @@ function ArriendosPage() {
             <p className="label-luxury mb-3">Nuestras Propiedades</p>
             <h1 className="heading-section text-foreground">Arriendos Disponibles</h1>
             <p className="text-body mt-4 max-w-2xl mx-auto">
-              Encuentra tu hogar ideal en Los Ángeles. Departamentos y casas amobladas con disponibilidad inmediata.
+              Encuentra tu hogar ideal en Los Ángeles. Departamentos y casas con disponibilidad inmediata.
             </p>
           </div>
 
