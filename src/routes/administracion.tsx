@@ -34,19 +34,9 @@ const services = [
     description: "Verificación de antecedentes comerciales, laborales y referencias para encontrar al inquilino ideal.",
   },
   {
-    icon: <BarChart3 size={28} />,
-    title: "Reportes Financieros",
-    description: "Informes mensuales de ingresos, gastos y estado de tu propiedad para total transparencia.",
-  },
-  {
     icon: <Shield size={28} />,
     title: "Gestión de Gastos Comunes",
     description: "Administración eficiente de gastos comunes en condominios, con rendiciones claras y puntuales.",
-  },
-  {
-    icon: <Building2 size={28} />,
-    title: "Administración de Condominios",
-    description: "Gestión integral de comunidades: asambleas, mantención de áreas comunes, seguridad y convivencia.",
   },
 ];
 

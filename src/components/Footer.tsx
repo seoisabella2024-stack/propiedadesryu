@@ -35,11 +35,15 @@ export function Footer() {
             <ul className="space-y-3 font-body text-sm">
               <li className="flex items-start gap-2">
                 <MapPin size={16} className="mt-0.5 shrink-0" />
-                <span>Av. Alemania 799, Los Ángeles, Biobío</span>
+                <span>Leonardo Da Vinci 952, Los Ángeles, Biobío</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={16} className="shrink-0" />
                 <a href="tel:+56941336389" className="hover:text-background transition-colors">+56 9 4133 6389</a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone size={16} className="shrink-0" />
+                <a href="tel:+56952264558" className="hover:text-background transition-colors">+56 9 5226 4558 (Rodrigo)</a>
               </li>
               <li className="flex items-center gap-2">
                 <Mail size={16} className="shrink-0" />
