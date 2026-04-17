@@ -74,6 +74,67 @@ function ImageGallery({ images, title }: { images: string[]; title: string }) {
   );
 }
 
+function VideoEmbed({ url }: { url: string }) {
+  // YouTube
+  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/);
+  if (yt) {
+    return (
+      <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted">
+        <iframe
+          src={`https://www.youtube.com/embed/${yt[1]}`}
+          title="Video de la propiedad"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="absolute inset-0 h-full w-full border-0"
+        />
+      </div>
+    );
+  }
+  // TikTok
+  const tt = url.match(/tiktok\.com\/.*\/video\/(\d+)/);
+  if (tt) {
+    return (
+      <div className="overflow-hidden rounded-lg bg-muted">
+        <iframe
+          src={`https://www.tiktok.com/embed/v2/${tt[1]}`}
+          title="Video TikTok"
+          allow="encrypted-media;"
+          allowFullScreen
+          className="w-full border-0"
+          style={{ height: 740, maxHeight: "80vh" }}
+        />
+      </div>
+    );
+  }
+  // Instagram
+  const ig = url.match(/instagram\.com\/(?:p|reel|tv)\/([\w-]+)/);
+  if (ig) {
+    return (
+      <div className="overflow-hidden rounded-lg bg-muted">
+        <iframe
+          src={`https://www.instagram.com/p/${ig[1]}/embed`}
+          title="Video Instagram"
+          allow="encrypted-media;"
+          allowFullScreen
+          className="w-full border-0"
+          style={{ height: 700, maxHeight: "80vh" }}
+        />
+      </div>
+    );
+  }
+  // Fallback
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-2 rounded-md bg-primary/10 px-4 py-3 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
+    >
+      Ver video de la propiedad →
+    </a>
+  );
+}
+
 function PropertyDetailPage() {
   const { id } = Route.useParams();
   const { property, loading } = useProperty(id);
@@ -171,14 +232,7 @@ function PropertyDetailPage() {
                     <Video size={18} className="text-primary" />
                     Video de la propiedad
                   </h3>
-                  <a
-                    href={property.video_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-md bg-primary/10 px-4 py-3 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
-                  >
-                    Ver video de la propiedad →
-                  </a>
+                  <VideoEmbed url={property.video_url} />
                 </div>
               )}
 

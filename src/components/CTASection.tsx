@@ -18,7 +18,7 @@ export function CTASection() {
             Contáctanos Hoy
           </h2>
           <p className="mt-4 mx-auto max-w-lg font-body text-sm font-light leading-relaxed text-background/60">
-            Estamos en Av. Alemania 799, Los Ángeles. Escríbenos por WhatsApp o visítanos directamente.
+            Estamos en Leonardo Da Vinci 952, Los Ángeles. Escríbenos por WhatsApp o visítanos directamente.
           </p>
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">

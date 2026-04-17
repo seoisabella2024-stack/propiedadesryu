@@ -19,16 +19,6 @@ export const Route = createFileRoute("/constructora")({
 
 const solutions = [
   {
-    icon: <Home size={28} />,
-    title: "Construcción de Casas",
-    description: "Diseñamos y construimos tu casa desde cero, con materiales de primera calidad y acabados premium.",
-  },
-  {
-    icon: <Building size={28} />,
-    title: "Edificios y Condominios",
-    description: "Desarrollo de proyectos inmobiliarios multifamiliares con altos estándares de calidad y seguridad.",
-  },
-  {
     icon: <PaintBucket size={28} />,
     title: "Remodelaciones",
     description: "Transformamos tu espacio con remodelaciones integrales: cocinas, baños, ampliaciones y más.",
@@ -45,8 +35,8 @@ const solutions = [
   },
   {
     icon: <HardHat size={28} />,
-    title: "Asesoría Técnica",
-    description: "Evaluación de terrenos, estudios de suelo, permisos de construcción y asesoría integral.",
+    title: "Asesoría Técnica Integral",
+    description: "Ofrecemos un acompañamiento completo que inicia con una visita técnica inicial para diagnóstico. Tras esta etapa, entregamos un presupuesto detallado; una vez aprobado, procedemos con la ejecución y supervisión directa del proyecto para garantizar resultados óptimos.",
   },
 ];
 
