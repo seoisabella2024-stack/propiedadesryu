@@ -171,14 +171,7 @@ function PropertyDetailPage() {
                     <Video size={18} className="text-primary" />
                     Video de la propiedad
                   </h3>
-                  <a
-                    href={property.video_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-md bg-primary/10 px-4 py-3 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
-                  >
-                    Ver video de la propiedad →
-                  </a>
+                  <VideoEmbed url={property.video_url} />
                 </div>
               )}
 
