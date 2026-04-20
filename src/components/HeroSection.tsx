@@ -1,8 +1,24 @@
 import { motion } from "framer-motion";
-import { Search, MapPin, Home, DollarSign } from "lucide-react";
+import { Search, MapPin, Home } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import heroImage from "@/assets/hero-luxury.jpg";
 
+const COMUNAS = ["Pucón", "Los Ángeles", "Concepción"] as const;
+const TIPOS = ["Arriendo", "Venta", "Parcela"] as const;
+
 export function HeroSection() {
+  const navigate = useNavigate();
+  const [comuna, setComuna] = useState<string>("");
+  const [tipo, setTipo] = useState<string>("");
+
+  const handleSearch = () => {
+    const t = tipo || "Arriendo";
+    const path =
+      t === "Venta" ? "/venta" : t === "Parcela" ? "/venta" : "/arriendos";
+    navigate({ to: path, search: comuna ? { comuna } : undefined });
+  };
+
   return (
     <section className="relative mt-16 h-[50vh] w-full overflow-hidden md:h-[60vh]">
       <img
@@ -41,12 +57,37 @@ export function HeroSection() {
           className="mt-8 w-full max-w-3xl"
         >
           <div className="flex flex-col gap-3 rounded-lg bg-background/95 backdrop-blur-sm p-3 shadow-2xl md:flex-row md:items-center md:gap-0 md:p-2">
-            <SearchField icon={<MapPin size={16} />} placeholder="Comuna" />
+            <div className="flex flex-1 items-center gap-2 px-4 py-2">
+              <MapPin size={16} className="text-muted-foreground" />
+              <select
+                value={comuna}
+                onChange={(e) => setComuna(e.target.value)}
+                className="w-full bg-transparent font-body text-sm text-foreground outline-none cursor-pointer"
+              >
+                <option value="">Comuna</option>
+                {COMUNAS.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
             <div className="hidden md:block w-px h-8 bg-border" />
-            <SearchField icon={<Home size={16} />} placeholder="Tipo" />
-            <div className="hidden md:block w-px h-8 bg-border" />
-            <SearchField icon={<DollarSign size={16} />} placeholder="Precio" />
-            <button className="btn-luxury-primary rounded-md px-5 py-2.5 flex items-center justify-center gap-2 text-xs">
+            <div className="flex flex-1 items-center gap-2 px-4 py-2">
+              <Home size={16} className="text-muted-foreground" />
+              <select
+                value={tipo}
+                onChange={(e) => setTipo(e.target.value)}
+                className="w-full bg-transparent font-body text-sm text-foreground outline-none cursor-pointer"
+              >
+                <option value="">Tipo</option>
+                {TIPOS.map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+            <button
+              onClick={handleSearch}
+              className="btn-luxury-primary rounded-md px-5 py-2.5 flex items-center justify-center gap-2 text-xs"
+            >
               <Search size={14} />
               <span>Buscar</span>
             </button>
@@ -54,18 +95,5 @@ export function HeroSection() {
         </motion.div>
       </div>
     </section>
-  );
-}
-
-function SearchField({ icon, placeholder }: { icon: React.ReactNode; placeholder: string }) {
-  return (
-    <div className="flex flex-1 items-center gap-2 px-4 py-2">
-      <span className="text-muted-foreground">{icon}</span>
-      <input
-        type="text"
-        placeholder={placeholder}
-        className="w-full bg-transparent font-body text-sm text-foreground placeholder:text-muted-foreground outline-none"
-      />
-    </div>
   );
 }

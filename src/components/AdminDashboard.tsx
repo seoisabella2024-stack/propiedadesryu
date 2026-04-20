@@ -68,7 +68,7 @@ export function AdminDashboard({ session }: { session: any }) {
     ? properties
     : properties.filter((p) => p.tag === filterTag);
 
-  const tags = ["all", "Arriendo", "Venta", "Terreno"];
+  const tags = ["all", "Arriendo", "Venta", "Parcela"];
 
   return (
     <div>
@@ -225,7 +225,6 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
     area: property?.area ?? "",
     tag: property?.tag ?? "Arriendo",
     description: property?.description ?? "",
-    features: property?.features?.join(", ") ?? "",
     availability: property?.availability ?? "Disponible",
   });
   const [existingImages, setExistingImages] = useState<string[]>(property?.images ?? []);
@@ -290,7 +289,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
         area: form.area,
         tag: form.tag,
         description: form.description,
-        features: form.features.split(",").map((f) => f.trim()).filter(Boolean),
+        features: [],
         availability: form.availability,
         image_url: allImages[0] || "",
         images: allImages,
@@ -352,7 +351,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
             >
               <option value="Arriendo">Arriendo</option>
               <option value="Venta">Venta</option>
-              <option value="Terreno">Terreno</option>
+              <option value="Parcela">Parcela</option>
             </select>
           </div>
           <div>
@@ -374,11 +373,6 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
             <Label className="text-sm">Superficie</Label>
             <Input value={form.area} onChange={(e) => update("area", e.target.value)} placeholder="54 m²" className="mt-1" />
           </div>
-        </div>
-
-        <div>
-          <Label className="text-sm">Características (separadas por coma)</Label>
-          <Input value={form.features} onChange={(e) => update("features", e.target.value)} placeholder="Cocina equipada, Internet, Estacionamiento" className="mt-1" />
         </div>
 
         <div>
