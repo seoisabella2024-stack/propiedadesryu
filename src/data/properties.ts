@@ -12,7 +12,7 @@ export interface Property {
   beds: number;
   baths: number;
   area: string;
-  tag: "Arriendo" | "Venta" | "Terreno";
+  tag: "Arriendo" | "Venta" | "Terreno" | "Parcela";
   features: string[];
   availability: string;
   description: string;
