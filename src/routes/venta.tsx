@@ -5,12 +5,17 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { PropertyCard } from "@/components/PropertyCard";
 import { useProperties } from "@/hooks/use-properties";
 
+type VentaSearch = { comuna?: string };
+
 export const Route = createFileRoute("/venta")({
   component: VentaPage,
+  validateSearch: (search: Record<string, unknown>): VentaSearch => ({
+    comuna: typeof search.comuna === "string" ? search.comuna : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Venta de Propiedades — Ryu Propiedades" },
-      { name: "description", content: "Propiedades en venta en Los Ángeles, Chile. Casas, departamentos y terrenos." },
+      { name: "description", content: "Propiedades en venta en Los Ángeles, Chile. Casas, departamentos y parcelas." },
       { property: "og:title", content: "Venta de Propiedades — Ryu Propiedades" },
       { property: "og:description", content: "Propiedades en venta en Los Ángeles, Chile." },
     ],
@@ -18,7 +23,14 @@ export const Route = createFileRoute("/venta")({
 });
 
 function VentaPage() {
+  const { comuna } = Route.useSearch();
   const { properties: ventas, loading } = useProperties("Venta");
+  const { properties: parcelas } = useProperties("Parcela");
+
+  const all = [...ventas, ...parcelas];
+  const filtered = comuna
+    ? all.filter((p) => p.location.toLowerCase().includes(comuna.toLowerCase()))
+    : all;
 
   return (
     <div className="min-h-screen">
@@ -29,15 +41,17 @@ function VentaPage() {
             <p className="label-luxury mb-3">Propiedades en Venta</p>
             <h1 className="heading-section text-foreground">Venta de Propiedades</h1>
             <p className="text-body mt-4 max-w-2xl mx-auto">
-              Encuentra la propiedad perfecta para comprar en Los Ángeles y alrededores.
+              {comuna
+                ? `Mostrando propiedades en venta en ${comuna}.`
+                : "Encuentra la propiedad perfecta para comprar en Los Ángeles y alrededores."}
             </p>
           </div>
 
           {loading ? (
             <p className="text-center text-muted-foreground py-8">Cargando...</p>
-          ) : ventas.length > 0 ? (
+          ) : filtered.length > 0 ? (
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {ventas.map((property) => (
+              {filtered.map((property) => (
                 <PropertyCard key={property.id} property={property} />
               ))}
             </div>

@@ -5,8 +5,13 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { PropertyCard } from "@/components/PropertyCard";
 import { useProperties } from "@/hooks/use-properties";
 
+type ArriendosSearch = { comuna?: string };
+
 export const Route = createFileRoute("/arriendos")({
   component: ArriendosPage,
+  validateSearch: (search: Record<string, unknown>): ArriendosSearch => ({
+    comuna: typeof search.comuna === "string" ? search.comuna : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Arriendos — Ryu Propiedades" },
@@ -18,7 +23,12 @@ export const Route = createFileRoute("/arriendos")({
 });
 
 function ArriendosPage() {
+  const { comuna } = Route.useSearch();
   const { properties: arriendos, loading } = useProperties("Arriendo");
+
+  const filtered = comuna
+    ? arriendos.filter((p) => p.location.toLowerCase().includes(comuna.toLowerCase()))
+    : arriendos;
 
   return (
     <div className="min-h-screen">
@@ -29,15 +39,17 @@ function ArriendosPage() {
             <p className="label-luxury mb-3">Nuestras Propiedades</p>
             <h1 className="heading-section text-foreground">Arriendos Disponibles</h1>
             <p className="text-body mt-4 max-w-2xl mx-auto">
-              Encuentra tu hogar ideal en Los Ángeles. Departamentos y casas con disponibilidad inmediata.
+              {comuna
+                ? `Mostrando propiedades en arriendo en ${comuna}.`
+                : "Encuentra tu hogar ideal en Los Ángeles. Departamentos y casas con disponibilidad inmediata."}
             </p>
           </div>
 
           {loading ? (
             <p className="text-center text-muted-foreground py-8">Cargando...</p>
-          ) : arriendos.length > 0 ? (
+          ) : filtered.length > 0 ? (
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {arriendos.map((property) => (
+              {filtered.map((property) => (
                 <PropertyCard key={property.id} property={property} />
               ))}
             </div>
