@@ -21,6 +21,7 @@ type DbProperty = {
   images: string[];
   video_url: string;
   user_id: string;
+  available?: boolean;
 };
 
 export function AdminDashboard({ session }: { session: any }) {
@@ -227,6 +228,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
     description: property?.description ?? "",
     availability: property?.availability ?? "Disponible",
   });
+  const [available, setAvailable] = useState<boolean>(property?.available ?? true);
   const [existingImages, setExistingImages] = useState<string[]>(property?.images ?? []);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
@@ -294,6 +296,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
         image_url: allImages[0] || "",
         images: allImages,
         video_url: videoUrl.trim(),
+        available,
       };
 
       if (isEditing && property) {
@@ -358,6 +361,19 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
             <Label className="text-sm">Disponibilidad</Label>
             <Input value={form.availability} onChange={(e) => update("availability", e.target.value)} className="mt-1" />
           </div>
+        </div>
+
+        <div className="flex items-center gap-3 rounded-md border border-border bg-secondary/40 p-3">
+          <input
+            id="available-toggle"
+            type="checkbox"
+            checked={!available}
+            onChange={(e) => setAvailable(!e.target.checked)}
+            className="h-4 w-4 rounded border-border accent-destructive"
+          />
+          <label htmlFor="available-toggle" className="font-body text-sm text-foreground cursor-pointer select-none">
+            Marcar como <span className="font-semibold">No disponible</span> (la propiedad seguirá visible pero atenuada)
+          </label>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">

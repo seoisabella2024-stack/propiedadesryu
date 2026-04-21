@@ -17,6 +17,7 @@ export type DbProperty = {
   image_url: string;
   images: string[];
   video_url: string;
+  available?: boolean;
 };
 
 function dbToProperty(row: DbProperty): Property {
@@ -35,6 +36,7 @@ function dbToProperty(row: DbProperty): Property {
     image: row.image_url || row.images?.[0] || "",
     images: row.images ?? [],
     video_url: row.video_url || "",
+    available: row.available ?? true,
   };
 }
 
