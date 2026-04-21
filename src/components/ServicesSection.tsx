@@ -18,13 +18,13 @@ const services = [
   {
     icon: <Building2 size={28} />,
     title: "Administración",
-    description: "Administración profesional de propiedades, optimizando rentabilidad y mantención.",
+    description: "Administración profesional de propiedades, optimizando rentabilidad y mantención con un equipo de profesionales.",
     to: "/administracion" as const,
   },
   {
     icon: <HardHat size={28} />,
     title: "Constructora",
-    description: "Proyectos de construcción con los más altos estándares de calidad y diseño moderno.",
+    description: "Proyectos de construcción con profesionales con los más altos estándares de calidad y diseño moderno.",
     to: "/constructora" as const,
   },
 ];
