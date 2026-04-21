@@ -363,6 +363,19 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
           </div>
         </div>
 
+        <div className="flex items-center gap-3 rounded-md border border-border bg-secondary/40 p-3">
+          <input
+            id="available-toggle"
+            type="checkbox"
+            checked={!available}
+            onChange={(e) => setAvailable(!e.target.checked)}
+            className="h-4 w-4 rounded border-border accent-destructive"
+          />
+          <label htmlFor="available-toggle" className="font-body text-sm text-foreground cursor-pointer select-none">
+            Marcar como <span className="font-semibold">No disponible</span> (la propiedad seguirá visible pero atenuada)
+          </label>
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-3">
           <div>
             <Label className="text-sm">Dormitorios</Label>
