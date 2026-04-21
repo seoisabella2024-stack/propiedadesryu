@@ -65,6 +65,21 @@ export function AdminDashboard({ session }: { session: any }) {
     setActiveTab("edit");
   };
 
+  const toggleAvailability = async (p: DbProperty) => {
+    const newValue = !(p.available ?? true);
+    setProperties((prev) => prev.map((x) => (x.id === p.id ? { ...x, available: newValue } : x)));
+    const { error } = await supabase
+      .from("properties")
+      .update({ available: newValue })
+      .eq("id", p.id);
+    if (error) {
+      toast.error("Error al actualizar: " + error.message);
+      setProperties((prev) => prev.map((x) => (x.id === p.id ? { ...x, available: !newValue } : x)));
+    } else {
+      toast.success(newValue ? "Marcada como disponible" : "Marcada como NO disponible");
+    }
+  };
+
   const filtered = filterTag === "all"
     ? properties
     : properties.filter((p) => p.tag === filterTag);
