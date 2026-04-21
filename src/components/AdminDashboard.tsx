@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogOut, Plus, Trash2, Upload, X, Image, Pencil } from "lucide-react";
+import { LogOut, Plus, Trash2, Upload, X, Image, Pencil, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 type DbProperty = {
