@@ -21,6 +21,7 @@ type DbProperty = {
   images: string[];
   video_url: string;
   user_id: string;
+  available?: boolean;
 };
 
 export function AdminDashboard({ session }: { session: any }) {
@@ -227,6 +228,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
     description: property?.description ?? "",
     availability: property?.availability ?? "Disponible",
   });
+  const [available, setAvailable] = useState<boolean>(property?.available ?? true);
   const [existingImages, setExistingImages] = useState<string[]>(property?.images ?? []);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
@@ -294,6 +296,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
         image_url: allImages[0] || "",
         images: allImages,
         video_url: videoUrl.trim(),
+        available,
       };
 
       if (isEditing && property) {
