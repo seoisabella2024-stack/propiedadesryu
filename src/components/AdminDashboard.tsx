@@ -148,13 +148,16 @@ export function AdminDashboard({ session }: { session: any }) {
                       <th className="px-4 py-3 font-body text-xs font-semibold text-foreground hidden md:table-cell">Ubicación</th>
                       <th className="px-4 py-3 font-body text-xs font-semibold text-foreground">Precio</th>
                       <th className="px-4 py-3 font-body text-xs font-semibold text-foreground hidden sm:table-cell">Tipo</th>
+                      <th className="px-4 py-3 font-body text-xs font-semibold text-foreground">Estado</th>
                       <th className="px-4 py-3 font-body text-xs font-semibold text-foreground hidden lg:table-cell">Fotos</th>
                       <th className="px-4 py-3 font-body text-xs font-semibold text-foreground">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filtered.map((p) => (
-                      <tr key={p.id} className="border-t border-border hover:bg-accent/30 transition-colors">
+                    {filtered.map((p) => {
+                      const isAvail = p.available ?? true;
+                      return (
+                      <tr key={p.id} className={`border-t border-border hover:bg-accent/30 transition-colors ${!isAvail ? "opacity-60" : ""}`}>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
                             {(p.image_url || p.images?.[0]) && (
@@ -167,6 +170,20 @@ export function AdminDashboard({ session }: { session: any }) {
                         <td className="px-4 py-3 font-heading text-sm font-semibold text-primary">{p.price}</td>
                         <td className="px-4 py-3 hidden sm:table-cell">
                           <span className="rounded bg-primary/10 px-2 py-0.5 font-body text-xs font-medium text-primary">{p.tag}</span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <button
+                            onClick={() => toggleAvailability(p)}
+                            className={`inline-flex items-center gap-1 rounded px-2 py-1 font-body text-xs font-medium transition-colors ${
+                              isAvail
+                                ? "bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20"
+                                : "bg-neutral-800 text-neutral-100 hover:bg-neutral-700"
+                            }`}
+                            title="Click para cambiar disponibilidad"
+                          >
+                            {isAvail ? <Eye size={12} /> : <EyeOff size={12} />}
+                            {isAvail ? "Disponible" : "No disponible"}
+                          </button>
                         </td>
                         <td className="px-4 py-3 hidden lg:table-cell">
                           <span className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -192,7 +209,8 @@ export function AdminDashboard({ session }: { session: any }) {
                           </div>
                         </td>
                       </tr>
-                    ))}
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
