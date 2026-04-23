@@ -42,7 +42,7 @@ const solutions = [
 
 const process = [
   { step: "01", title: "Consulta Inicial", description: "Conversamos sobre tu proyecto, necesidades y presupuesto." },
-  { step: "02", title: "Diseño y Planificación", description: "Creamos planos, presupuesto detallado y cronograma de obra." },
+  { step: "02", title: "Diseño y Planificación", description: "Preparamos presupuesto detallado y cronograma de obra." },
   { step: "03", title: "Construcción", description: "Ejecutamos la obra con supervisión profesional permanente." },
   { step: "04", title: "Entrega", description: "Entregamos tu proyecto terminado, con garantía y documentación completa." },
 ];
