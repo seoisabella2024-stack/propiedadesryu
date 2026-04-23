@@ -66,18 +66,31 @@ export function AdminDashboard({ session }: { session: any }) {
   };
 
   const toggleAvailability = async (p: DbProperty) => {
-    const newValue = !(p.available ?? true);
+    const previousValue = p.available ?? true;
+    const newValue = !previousValue;
+
     setProperties((prev) => prev.map((x) => (x.id === p.id ? { ...x, available: newValue } : x)));
-    const { error } = await supabase
+
+    const { data, error } = await supabase
       .from("properties")
-      .update({ available: newValue })
-      .eq("id", p.id);
-    if (error) {
-      toast.error("Error al actualizar: " + error.message);
-      setProperties((prev) => prev.map((x) => (x.id === p.id ? { ...x, available: !newValue } : x)));
-    } else {
-      toast.success(newValue ? "Marcada como disponible" : "Marcada como NO disponible");
+      .update({
+        available: newValue,
+        availability: newValue ? "Disponible" : "No disponible",
+      })
+      .eq("id", p.id)
+      .select("id, available, availability")
+      .single();
+
+    if (error || !data) {
+      toast.error("Error al actualizar: " + (error?.message || "No se pudo guardar el estado"));
+      setProperties((prev) => prev.map((x) => (x.id === p.id ? { ...x, available: previousValue } : x)));
+      return;
     }
+
+    setProperties((prev) => prev.map((x) => (
+      x.id === p.id ? { ...x, available: data.available, availability: data.availability } : x
+    )));
+    toast.success(data.available ? "Marcada como disponible" : "Marcada como NO disponible");
   };
 
   const filtered = filterTag === "all"
@@ -325,7 +338,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
         tag: form.tag,
         description: form.description,
         features: [],
-        availability: form.availability,
+        availability: available ? form.availability : "No disponible",
         image_url: allImages[0] || "",
         images: allImages,
         video_url: videoUrl.trim(),
