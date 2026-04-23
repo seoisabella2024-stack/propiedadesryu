@@ -9,6 +9,7 @@ type DbProperty = {
   id: string;
   title: string;
   location: string;
+  comuna?: string;
   price: string;
   beds: number;
   baths: number;
@@ -266,6 +267,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
   const [form, setForm] = useState({
     title: property?.title ?? "",
     location: property?.location ?? "",
+    comuna: property?.comuna ?? "",
     price: property?.price ?? "",
     beds: String(property?.beds ?? 0),
     baths: String(property?.baths ?? 0),
@@ -331,6 +333,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
       const propertyData = {
         title: form.title,
         location: form.location,
+        comuna: form.comuna,
         price: form.price,
         beds: parseInt(form.beds) || 0,
         baths: parseInt(form.baths) || 0,
@@ -383,6 +386,10 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
           <div>
             <Label className="text-sm">Ubicación</Label>
             <Input value={form.location} onChange={(e) => update("location", e.target.value)} required className="mt-1" />
+          </div>
+          <div>
+            <Label className="text-sm">Comuna</Label>
+            <Input value={form.comuna} onChange={(e) => update("comuna", e.target.value)} className="mt-1" />
           </div>
         </div>
 
