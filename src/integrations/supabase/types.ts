@@ -21,6 +21,7 @@ export type Database = {
           available: boolean
           baths: number
           beds: number
+          comuna: string
           created_at: string
           description: string
           features: string[]
@@ -41,6 +42,7 @@ export type Database = {
           available?: boolean
           baths?: number
           beds?: number
+          comuna?: string
           created_at?: string
           description?: string
           features?: string[]
@@ -61,6 +63,7 @@ export type Database = {
           available?: boolean
           baths?: number
           beds?: number
+          comuna?: string
           created_at?: string
           description?: string
           features?: string[]

@@ -8,6 +8,7 @@ export interface Property {
   images?: string[];
   title: string;
   location: string;
+  comuna?: string;
   price: string;
   beds: number;
   baths: number;
@@ -27,6 +28,7 @@ export const properties: Property[] = [
     images: [property1],
     title: "Depto Amoblado Full — Calle Balmaceda",
     location: "Los Ángeles, Biobío",
+    comuna: "Los Ángeles",
     price: "$600.000 CLP + GGCC",
     beds: 2,
     baths: 2,
@@ -43,6 +45,7 @@ export const properties: Property[] = [
     images: [property2],
     title: "Casa Mediterránea en Condominio",
     location: "Km 1.5 Camino Antuco, Los Ángeles",
+    comuna: "Los Ángeles",
     price: "$1.200.000 CLP (GGCC incl.)",
     beds: 3,
     baths: 3,
@@ -59,6 +62,7 @@ export const properties: Property[] = [
     images: [property3],
     title: "Depto Moderno — Edificio Luminity",
     location: "Laguna Verde 2365, Los Ángeles",
+    comuna: "Los Ángeles",
     price: "$750.000 CLP (GGCC incl.)",
     beds: 2,
     baths: 2,
@@ -75,6 +79,7 @@ export const properties: Property[] = [
     images: [property2],
     title: "Casa en Parcela — Camino Antuco",
     location: "Km 3, Camino Antuco, Los Ángeles",
+    comuna: "Los Ángeles",
     price: "$185.000.000 CLP",
     beds: 4,
     baths: 3,
@@ -91,6 +96,7 @@ export const properties: Property[] = [
     images: [property1],
     title: "Departamento Céntrico — Los Ángeles",
     location: "Centro, Los Ángeles",
+    comuna: "Los Ángeles",
     price: "$62.000.000 CLP",
     beds: 2,
     baths: 1,
@@ -107,6 +113,7 @@ export const properties: Property[] = [
     images: [property3],
     title: "Terreno Urbano — Nacimiento",
     location: "Nacimiento, Biobío",
+    comuna: "",
     price: "$18.500.000 CLP",
     beds: 0,
     baths: 0,

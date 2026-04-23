@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { PropertyCard } from "@/components/PropertyCard";
 import { useProperty, useSuggestions } from "@/hooks/use-properties";
-import { Bed, Bath, Maximize, MapPin, ArrowLeft, CheckCircle, ChevronLeft, ChevronRight, Video } from "lucide-react";
+import { Bed, Bath, Maximize, MapPin, ArrowLeft, ChevronLeft, ChevronRight, Video } from "lucide-react";
 
 export const Route = createFileRoute("/propiedad/$id")({
   component: PropertyDetailPage,
@@ -207,18 +207,6 @@ function PropertyDetailPage() {
                   <Maximize size={18} />
                   <span className="font-body text-sm">{property.area}</span>
                 </div>
-              </div>
-
-              <div className="mt-6">
-                <h3 className="font-heading text-lg font-semibold text-foreground mb-3">Características</h3>
-                <ul className="space-y-2">
-                  {property.features.map((f) => (
-                    <li key={f} className="flex items-center gap-2 font-body text-sm text-foreground">
-                      <CheckCircle size={16} className="text-primary shrink-0" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
               </div>
 
               <div className="mt-6">

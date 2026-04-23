@@ -9,6 +9,7 @@ type DbProperty = {
   id: string;
   title: string;
   location: string;
+  comuna?: string;
   price: string;
   beds: number;
   baths: number;
@@ -33,7 +34,7 @@ export function AdminDashboard({ session }: { session: any }) {
 
   const fetchProperties = async () => {
     setLoading(true);
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from("properties")
       .select("*")
       .order("created_at", { ascending: false });
@@ -51,7 +52,7 @@ export function AdminDashboard({ session }: { session: any }) {
 
   const handleDelete = async (id: string) => {
     if (!confirm("¿Estás seguro de eliminar esta propiedad?")) return;
-    const { error } = await supabase.from("properties").delete().eq("id", id);
+    const { error } = await (supabase as any).from("properties").delete().eq("id", id);
     if (error) {
       toast.error("Error al eliminar: " + error.message);
     } else {
@@ -71,7 +72,7 @@ export function AdminDashboard({ session }: { session: any }) {
 
     setProperties((prev) => prev.map((x) => (x.id === p.id ? { ...x, available: newValue } : x)));
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from("properties")
       .update({
         available: newValue,
@@ -266,6 +267,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
   const [form, setForm] = useState({
     title: property?.title ?? "",
     location: property?.location ?? "",
+    comuna: property?.comuna ?? "",
     price: property?.price ?? "",
     beds: String(property?.beds ?? 0),
     baths: String(property?.baths ?? 0),
@@ -331,6 +333,7 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
       const propertyData = {
         title: form.title,
         location: form.location,
+        comuna: form.comuna,
         price: form.price,
         beds: parseInt(form.beds) || 0,
         baths: parseInt(form.baths) || 0,
@@ -346,14 +349,14 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
       };
 
       if (isEditing && property) {
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from("properties")
           .update(propertyData)
           .eq("id", property.id);
         if (error) throw error;
         toast.success("Propiedad actualizada correctamente");
       } else {
-        const { error } = await supabase.from("properties").insert({
+        const { error } = await (supabase as any).from("properties").insert({
           ...propertyData,
           user_id: session.user.id,
         });
@@ -383,6 +386,10 @@ function PropertyForm({ session, property, onDone }: { session: any; property?: 
           <div>
             <Label className="text-sm">Ubicación</Label>
             <Input value={form.location} onChange={(e) => update("location", e.target.value)} required className="mt-1" />
+          </div>
+          <div>
+            <Label className="text-sm">Comuna</Label>
+            <Input value={form.comuna} onChange={(e) => update("comuna", e.target.value)} className="mt-1" />
           </div>
         </div>
 

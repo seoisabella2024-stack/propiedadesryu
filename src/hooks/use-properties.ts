@@ -6,6 +6,7 @@ export type DbProperty = {
   id: string;
   title: string;
   location: string;
+  comuna?: string;
   price: string;
   beds: number;
   baths: number;
@@ -25,6 +26,7 @@ function dbToProperty(row: DbProperty): Property {
     id: row.id,
     title: row.title,
     location: row.location,
+    comuna: row.comuna || "",
     price: row.price,
     beds: row.beds,
     baths: row.baths,
@@ -40,20 +42,26 @@ function dbToProperty(row: DbProperty): Property {
   };
 }
 
-export function useProperties(tag?: Property["tag"]) {
+function normalizeComunas(rows: Array<{ comuna?: string | null }>) {
+  return Array.from(new Set(rows.map((row) => row.comuna?.trim()).filter(Boolean) as string[]));
+}
+
+export function useProperties(tag?: Property["tag"], comuna?: string) {
   const [data, setData] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const query = supabase.from("properties").select("*").order("created_at", { ascending: false });
+      const query = (supabase as any).from("properties").select("*").order("created_at", { ascending: false });
       if (tag) query.eq("tag", tag);
+      if (comuna) query.eq("comuna", comuna);
       const { data: rows, error } = await query;
       if (!cancelled) {
         if (error || !rows || rows.length === 0) {
           // fallback to static
-          const fallback = tag ? staticProperties.filter((p) => p.tag === tag) : staticProperties;
+          const fallback = (tag ? staticProperties.filter((p) => p.tag === tag) : staticProperties)
+            .filter((p) => !comuna || p.comuna === comuna);
           setData(fallback);
         } else {
           setData(rows.map(dbToProperty));
@@ -62,9 +70,28 @@ export function useProperties(tag?: Property["tag"]) {
       }
     })();
     return () => { cancelled = true; };
-  }, [tag]);
+  }, [tag, comuna]);
 
   return { properties: data, loading };
+}
+
+export function useComunas() {
+  const [comunas, setComunas] = useState<string[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("properties")
+        .select("comuna")
+        .neq("comuna", "")
+        .order("comuna", { ascending: true });
+      if (!cancelled) setComunas(normalizeComunas(data ?? []));
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  return comunas;
 }
 
 export function useProperty(id: string) {

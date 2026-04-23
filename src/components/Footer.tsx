@@ -71,14 +71,15 @@ export function Footer() {
             © 2025 Ryu Propiedades. Todos los derechos reservados.
           </p>
           <div className="flex gap-6">
-            {["Instagram", "Facebook", "WhatsApp"].map((social) => (
-              <span
-                key={social}
-                className="cursor-pointer font-body text-xs uppercase tracking-wider text-background/40 transition-colors hover:text-background"
-              >
-                {social}
-              </span>
-            ))}
+            <a href="https://www.instagram.com/ryu_propiedades_constructora/" target="_blank" rel="noopener noreferrer" className="font-body text-xs uppercase tracking-wider text-background/40 transition-colors hover:text-background">
+              Instagram
+            </a>
+            <a href="https://web.facebook.com/ARRIENDORYU/" target="_blank" rel="noopener noreferrer" className="font-body text-xs uppercase tracking-wider text-background/40 transition-colors hover:text-background">
+              Facebook
+            </a>
+            <a href="https://wa.me/56941336389?text=Hola%2C%20me%20interesa%20una%20propiedad" target="_blank" rel="noopener noreferrer" className="font-body text-xs uppercase tracking-wider text-background/40 transition-colors hover:text-background">
+              WhatsApp
+            </a>
           </div>
         </div>
       </div>

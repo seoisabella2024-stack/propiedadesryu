@@ -24,11 +24,7 @@ export const Route = createFileRoute("/arriendos")({
 
 function ArriendosPage() {
   const { comuna } = Route.useSearch();
-  const { properties: arriendos, loading } = useProperties("Arriendo");
-
-  const filtered = comuna
-    ? arriendos.filter((p) => p.location.toLowerCase().includes(comuna.toLowerCase()))
-    : arriendos;
+  const { properties: filtered, loading } = useProperties("Arriendo", comuna);
 
   return (
     <div className="min-h-screen">
