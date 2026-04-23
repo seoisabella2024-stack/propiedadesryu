@@ -24,13 +24,11 @@ export const Route = createFileRoute("/venta")({
 
 function VentaPage() {
   const { comuna } = Route.useSearch();
-  const { properties: ventas, loading } = useProperties("Venta");
-  const { properties: parcelas } = useProperties("Parcela");
+  const { properties: ventas, loading } = useProperties("Venta", comuna);
+  const { properties: parcelas } = useProperties("Parcela", comuna);
 
   const all = [...ventas, ...parcelas];
-  const filtered = comuna
-    ? all.filter((p) => p.location.toLowerCase().includes(comuna.toLowerCase()))
-    : all;
+  const filtered = all;
 
   return (
     <div className="min-h-screen">

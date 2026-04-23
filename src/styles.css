@@ -200,4 +200,19 @@
     letter-spacing: 0.2em;
     color: var(--muted-foreground);
   }
+  .typewriter-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 0.08em solid currentColor;
+    animation: typewriter 1.6s steps(21, end) 0.2s both, typewriter-cursor 0.85s step-end infinite;
+  }
+  @keyframes typewriter {
+    from { max-width: 0; }
+    to { max-width: 21ch; }
+  }
+  @keyframes typewriter-cursor {
+    0%, 100% { border-color: currentColor; }
+    50% { border-color: transparent; }
+  }
 }
