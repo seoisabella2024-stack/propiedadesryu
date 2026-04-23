@@ -42,6 +42,10 @@ function dbToProperty(row: DbProperty): Property {
   };
 }
 
+function normalizeComunas(rows: Array<{ comuna?: string | null }>) {
+  return Array.from(new Set(rows.map((row) => row.comuna?.trim()).filter(Boolean) as string[]));
+}
+
 export function useProperties(tag?: Property["tag"], comuna?: string) {
   const [data, setData] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,7 +53,7 @@ export function useProperties(tag?: Property["tag"], comuna?: string) {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const query = supabase.from("properties").select("*").order("created_at", { ascending: false });
+      const query = (supabase as any).from("properties").select("*").order("created_at", { ascending: false });
       if (tag) query.eq("tag", tag);
       if (comuna) query.eq("comuna", comuna);
       const { data: rows, error } = await query;
@@ -69,6 +73,25 @@ export function useProperties(tag?: Property["tag"], comuna?: string) {
   }, [tag, comuna]);
 
   return { properties: data, loading };
+}
+
+export function useComunas() {
+  const [comunas, setComunas] = useState<string[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("properties")
+        .select("comuna")
+        .neq("comuna", "")
+        .order("comuna", { ascending: true });
+      if (!cancelled) setComunas(normalizeComunas(data ?? []));
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  return comunas;
 }
 
 export function useProperty(id: string) {
