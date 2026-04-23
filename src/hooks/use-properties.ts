@@ -6,6 +6,7 @@ export type DbProperty = {
   id: string;
   title: string;
   location: string;
+  comuna?: string;
   price: string;
   beds: number;
   baths: number;
@@ -25,6 +26,7 @@ function dbToProperty(row: DbProperty): Property {
     id: row.id,
     title: row.title,
     location: row.location,
+    comuna: row.comuna || "",
     price: row.price,
     beds: row.beds,
     baths: row.baths,
@@ -40,7 +42,7 @@ function dbToProperty(row: DbProperty): Property {
   };
 }
 
-export function useProperties(tag?: Property["tag"]) {
+export function useProperties(tag?: Property["tag"], comuna?: string) {
   const [data, setData] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,11 +51,13 @@ export function useProperties(tag?: Property["tag"]) {
     (async () => {
       const query = supabase.from("properties").select("*").order("created_at", { ascending: false });
       if (tag) query.eq("tag", tag);
+      if (comuna) query.eq("comuna", comuna);
       const { data: rows, error } = await query;
       if (!cancelled) {
         if (error || !rows || rows.length === 0) {
           // fallback to static
-          const fallback = tag ? staticProperties.filter((p) => p.tag === tag) : staticProperties;
+          const fallback = (tag ? staticProperties.filter((p) => p.tag === tag) : staticProperties)
+            .filter((p) => !comuna || p.comuna === comuna);
           setData(fallback);
         } else {
           setData(rows.map(dbToProperty));
@@ -62,7 +66,7 @@ export function useProperties(tag?: Property["tag"]) {
       }
     })();
     return () => { cancelled = true; };
-  }, [tag]);
+  }, [tag, comuna]);
 
   return { properties: data, loading };
 }
