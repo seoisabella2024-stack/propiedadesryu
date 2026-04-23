@@ -10,7 +10,7 @@ export const Route = createFileRoute("/administracion")({
   head: () => ({
     meta: [
       { title: "Administración de Propiedades — Ryu Propiedades" },
-      { name: "description", content: "Servicio profesional de administración de propiedades, condominios y comunidades en Los Ángeles, Chile." },
+      { name: "description", content: "Servicio profesional de administración de propiedades en Los Ángeles, Chile." },
       { property: "og:title", content: "Administración de Propiedades — Ryu Propiedades" },
       { property: "og:description", content: "Servicio profesional de administración de propiedades en Los Ángeles." },
     ],
@@ -60,7 +60,7 @@ function AdministracionPage() {
           <p className="label-luxury mb-3">Servicio Profesional</p>
           <h1 className="heading-section text-foreground">Administración de Propiedades</h1>
           <p className="text-body mt-4 max-w-3xl mx-auto">
-            En Ryu Propiedades nos hacemos cargo de la administración integral de tu propiedad, condominio o comunidad. 
+            En Ryu Propiedades nos hacemos cargo de la administración integral de tu propiedad. 
             Desde la selección de arrendatarios hasta la mantención y cobro de arriendos, para que tú solo te preocupes de recibir tu renta.
           </p>
         </div>
