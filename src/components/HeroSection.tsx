@@ -3,12 +3,13 @@ import { Search, MapPin, Home } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import heroImage from "@/assets/hero-luxury.jpg";
+import { useComunas } from "@/hooks/use-properties";
 
-const COMUNAS = ["Pucón", "Los Ángeles", "Concepción"] as const;
 const TIPOS = ["Arriendo", "Venta", "Parcela"] as const;
 
 export function HeroSection() {
   const navigate = useNavigate();
+  const comunas = useComunas();
   const [comuna, setComuna] = useState<string>("");
   const [tipo, setTipo] = useState<string>("");
 
@@ -37,7 +38,7 @@ export function HeroSection() {
           transition={{ duration: 0.7 }}
           className="font-heading text-3xl font-bold text-background md:text-5xl"
         >
-          Tu Propiedad Ideal en
+          <span className="typewriter-text">Tu Propiedad Ideal en</span>
           <br />
           <span className="text-primary-foreground">Los Ángeles</span>
         </motion.h1>
@@ -65,7 +66,7 @@ export function HeroSection() {
                 className="w-full bg-transparent font-body text-sm text-foreground outline-none cursor-pointer"
               >
                 <option value="">Comuna</option>
-                {COMUNAS.map((c) => (
+                {comunas.map((c) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>

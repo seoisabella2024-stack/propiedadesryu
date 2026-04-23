@@ -60,24 +60,13 @@ export function PropertyCard({ property, compact = false }: { property: Property
         </div>
 
         {!compact && (
-          <>
-            <ul className="mt-3 space-y-1">
-              {property.features.map((f) => (
-                <li key={f} className={`font-body text-xs flex items-center gap-1.5 ${isUnavailable ? "text-neutral-500" : "text-muted-foreground"}`}>
-                  <span className={`h-1 w-1 rounded-full shrink-0 ${isUnavailable ? "bg-neutral-500" : "bg-primary"}`} />
-                  {f}
-                </li>
-              ))}
-            </ul>
-
-            <div className={`mt-3 rounded px-3 py-1.5 text-center ${
-              isUnavailable ? "bg-neutral-800" : "bg-primary/10"
-            }`}>
-              <span className={`font-body text-xs font-semibold ${isUnavailable ? "text-neutral-300" : "text-primary"}`}>
-                {isUnavailable ? "No disponible" : property.availability}
-              </span>
-            </div>
-          </>
+          <div className={`mt-3 rounded px-3 py-1.5 text-center ${
+            isUnavailable ? "bg-neutral-800" : "bg-primary/10"
+          }`}>
+            <span className={`font-body text-xs font-semibold ${isUnavailable ? "text-neutral-300" : "text-primary"}`}>
+              {isUnavailable ? "No disponible" : property.availability}
+            </span>
+          </div>
         )}
 
         <div className="mt-3 flex gap-2">
